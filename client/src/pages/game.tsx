@@ -4,6 +4,7 @@ import GameCanvas from "@/components/GameCanvas";
 import PlayerPanel from "@/components/PlayerPanel";
 import VoiceControls from "@/components/VoiceControls";
 import GameStats from "@/components/GameStats";
+import DebugPanel from "@/components/DebugPanel";
 import { useGameState } from "@/hooks/useGameState";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { Card } from "@/components/ui/card";
@@ -188,6 +189,8 @@ export default function GamePage() {
           </button>
         </div>
       </div>
+      
+      <DebugPanel />
     </div>
   );
 }

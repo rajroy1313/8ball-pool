@@ -83,10 +83,16 @@ export class GameEngine {
   }
 
   simulateShot(balls: Ball[], power: number, angle: number): Ball[] {
+    console.log('[DEBUG] Simulating shot - Power:', power, 'Angle:', angle);
     const updatedBalls = balls.map(ball => ({ ...ball }));
     const cueBall = updatedBalls.find(ball => ball.type === 'cue');
     
-    if (!cueBall) return updatedBalls;
+    if (!cueBall) {
+      console.warn('[WARN] No cue ball found for shot simulation');
+      return updatedBalls;
+    }
+    
+    console.log('[DEBUG] Cue ball position:', cueBall.x, cueBall.y);
 
     // Apply initial velocity to cue ball
     const maxVelocity = 15;
@@ -186,6 +192,8 @@ export class GameEngine {
     const pottedBalls = newBalls.filter((ball, index) => 
       !oldBalls[index].potted && ball.potted
     );
+    
+    console.log('[DEBUG] Shot evaluation - Potted balls:', pottedBalls.map(b => ({ id: b.id, type: b.type })));
 
     const cueBallPotted = pottedBalls.some(ball => ball.type === 'cue');
     const eightBallPotted = pottedBalls.some(ball => ball.type === '8ball');

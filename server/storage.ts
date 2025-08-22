@@ -36,17 +36,24 @@ export class MemStorage implements IStorage {
 
   // User methods
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    console.log('[DEBUG] Getting user by ID:', id);
+    const user = this.users.get(id);
+    console.log('[DEBUG] User found:', !!user);
+    return user;
   }
 
   async getUserByDiscordId(discordId: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.discordId === discordId);
+    console.log('[DEBUG] Getting user by Discord ID:', discordId);
+    const user = Array.from(this.users.values()).find(user => user.discordId === discordId);
+    console.log('[DEBUG] Discord user found:', !!user, user?.username || 'none');
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
+    console.log('[DEBUG] Created new user:', user.username, 'ID:', id);
     return user;
   }
 
@@ -105,6 +112,7 @@ export class MemStorage implements IStorage {
       isMuted: false,
     };
     this.players.set(id, player);
+    console.log('[DEBUG] Added player to room:', insertPlayer.gameRoomId, 'Player ID:', id);
     return player;
   }
 
@@ -146,6 +154,7 @@ export class MemStorage implements IStorage {
       lastShotResult: null,
     };
     this.gameStates.set(id, gameState);
+    console.log('[DEBUG] Created game state for room:', gameRoomId, 'with', initialBalls.length, 'balls');
     return gameState;
   }
 

@@ -2,6 +2,15 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+console.log('[DEBUG] ==========================================');
+console.log('[DEBUG] 8-Ball Pool Discord Bot Server Starting');
+console.log('[DEBUG] ==========================================');
+console.log('[DEBUG] Environment:', process.env.NODE_ENV);
+console.log('[DEBUG] Discord bot token available:', !!process.env.DISCORD_BOT_TOKEN);
+console.log('[DEBUG] Server starting at:', new Date().toISOString());
+console.log('[DEBUG] Process PID:', process.pid);
+console.log('[DEBUG] ==========================================');
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

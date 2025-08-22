@@ -196,6 +196,8 @@ export default function GameCanvas({ gameState, isMyTurn, onShoot, onAim }: Game
     
     setMousePosition({ x: mouseX, y: mouseY });
     setIsAiming(true);
+    
+    console.log('[DEBUG] Aiming at position:', mouseX.toFixed(2), mouseY.toFixed(2));
 
     if (gameState?.balls) {
       const cueBall = gameState.balls.find(ball => ball.type === 'cue' && ball.visible);
@@ -214,7 +216,10 @@ export default function GameCanvas({ gameState, isMyTurn, onShoot, onAim }: Game
   };
 
   const handleShoot = () => {
-    if (!isMyTurn || shotPower === 0) return;
+    if (!isMyTurn || shotPower === 0) {
+      console.log('[DEBUG] Shot blocked - isMyTurn:', isMyTurn, 'shotPower:', shotPower);
+      return;
+    }
 
     if (gameState?.balls) {
       const cueBall = gameState.balls.find(ball => ball.type === 'cue' && ball.visible);
@@ -223,10 +228,15 @@ export default function GameCanvas({ gameState, isMyTurn, onShoot, onAim }: Game
         const dy = mousePosition.y - cueBall.y;
         const angle = Math.atan2(dy, dx);
         
+        console.log('[DEBUG] Shooting - Power:', shotPower, 'Angle:', (angle * 180 / Math.PI).toFixed(2), 'degrees');
         onShoot(shotPower, angle);
         setShotPower(0);
         setIsAiming(false);
+      } else {
+        console.warn('[WARN] No cue ball found for shooting');
       }
+    } else {
+      console.warn('[WARN] No game state available for shooting');
     }
   };
 

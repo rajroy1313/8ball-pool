@@ -2,11 +2,13 @@ import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes, CommandIn
 import { storage } from '../storage';
 
 export async function initializeDiscordBot() {
+  console.log('[DEBUG] Initializing Discord bot...');
   const token = process.env.DISCORD_BOT_TOKEN;
   if (!token) {
-    console.warn('Discord bot token not provided. Bot functionality will be disabled.');
+    console.warn('[WARN] Discord bot token not provided. Bot functionality will be disabled.');
     return null;
   }
+  console.log('[DEBUG] Discord token found, creating client...');
 
   const client = new Client({
     intents: [
@@ -59,6 +61,8 @@ export async function initializeDiscordBot() {
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
+    
+    console.log('[DEBUG] Discord command received:', interaction.commandName, 'from user:', interaction.user.username, 'in channel:', interaction.channelId);
 
     try {
       switch (interaction.commandName) {
@@ -84,12 +88,17 @@ export async function initializeDiscordBot() {
   client.on('voiceStateUpdate', async (oldState: VoiceState, newState: VoiceState) => {
     // Handle voice activity changes for game participants
     const userId = newState.id;
+    console.log('[DEBUG] Voice state update for user:', userId);
+    console.log('[DEBUG] Old channel:', oldState.channelId, 'New channel:', newState.channelId);
+    
     const user = await storage.getUserByDiscordId(userId);
     
     if (user) {
       // Find active games for this user
       // This is a simplified version - in production you'd want more sophisticated tracking
-      console.log(`Voice state changed for user ${user.username}`);
+      console.log(`[DEBUG] Voice state changed for registered user ${user.username}`);
+    } else {
+      console.log('[DEBUG] Voice state changed for unregistered user');
     }
   });
 
@@ -98,8 +107,10 @@ export async function initializeDiscordBot() {
 }
 
 async function handleStartGame(interaction: CommandInteraction) {
+  console.log('[DEBUG] Handling start game command in channel:', interaction.channelId);
   const channelId = interaction.channelId;
   const voiceChannel = interaction.options.getChannel('voice-channel');
+  console.log('[DEBUG] Voice channel selected:', voiceChannel?.id || 'none');
   
   // Check if there's already an active game in this channel
   const existingRoom = await storage.getGameRoomByChannelId(channelId);
@@ -128,6 +139,7 @@ async function handleStartGame(interaction: CommandInteraction) {
 }
 
 async function handleJoinGame(interaction: CommandInteraction) {
+  console.log('[DEBUG] Handling join game command from user:', interaction.user.username);
   const channelId = interaction.channelId;
   const discordUser = interaction.user;
 
