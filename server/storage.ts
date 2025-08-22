@@ -67,6 +67,7 @@ export class MemStorage implements IStorage {
       status: "waiting",
       maxPlayers: 2,
       createdAt: new Date(),
+      discordVoiceChannelId: insertGameRoom.discordVoiceChannelId || null,
     };
     this.gameRooms.set(id, gameRoom);
     return gameRoom;

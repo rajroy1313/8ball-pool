@@ -72,7 +72,7 @@ export default function GameStats({ gameState, players }: GameStatsProps) {
             <div className="flex justify-between">
               <span className="text-discord-gray">Turn Time Left</span>
               <span className="font-mono text-yellow-400" data-testid="stat-time-left">
-                {Math.floor(gameState.timeLeft / 60)}:{(gameState.timeLeft % 60).toString().padStart(2, '0')}
+                {Math.floor((gameState.timeLeft || 0) / 60)}:{((gameState.timeLeft || 0) % 60).toString().padStart(2, '0')}
               </span>
             </div>
             

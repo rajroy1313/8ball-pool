@@ -82,7 +82,7 @@ function PlayerCard({ player, index }: PlayerCardProps) {
         
         <div>
           <div className="font-medium" data-testid={`player-name-${index}`}>
-            {user?.username || `Player ${index + 1}`}
+            {(user as any)?.username || `Player ${index + 1}`}
           </div>
           <div className={`text-xs ${
             isActive 

@@ -99,7 +99,7 @@ export async function initializeDiscordBot() {
 
 async function handleStartGame(interaction: CommandInteraction) {
   const channelId = interaction.channelId;
-  const voiceChannel = interaction.options.get('voice-channel')?.channel;
+  const voiceChannel = interaction.options.getChannel('voice-channel');
   
   // Check if there's already an active game in this channel
   const existingRoom = await storage.getGameRoomByChannelId(channelId);
@@ -201,7 +201,7 @@ async function handleGameStatus(interaction: CommandInteraction) {
       const user = await storage.getUser(currentPlayer.userId);
       statusMessage += `🎯 **Current Turn:** ${user?.username || 'Unknown'}\n`;
     }
-    statusMessage += `⏱️ **Time Left:** ${Math.floor(gameState.timeLeft / 60)}:${(gameState.timeLeft % 60).toString().padStart(2, '0')}\n`;
+    statusMessage += `⏱️ **Time Left:** ${Math.floor((gameState.timeLeft || 0) / 60)}:${((gameState.timeLeft || 0) % 60).toString().padStart(2, '0')}\n`;
   }
 
   const gameUrl = `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/game/${gameRoom.id}`;

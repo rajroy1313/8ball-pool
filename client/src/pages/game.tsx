@@ -62,7 +62,7 @@ export default function GamePage() {
     );
   }
 
-  const currentPlayer = players?.find(p => p.isCurrentPlayer);
+  const currentPlayer = players?.find((p: any) => p.isCurrentPlayer);
   const isMyTurn = currentPlayer !== undefined; // This would need user authentication in real app
 
   return (
@@ -75,7 +75,7 @@ export default function GamePage() {
               <i className="fas fa-circle text-pool-green text-2xl"></i>
               <h1 className="text-xl font-bold" data-testid="game-title">8-Ball Pool Bot</h1>
               <span className="bg-pool-green text-black px-2 py-1 rounded text-xs font-mono">
-                {gameRoom.status === 'active' ? 'LIVE' : 'WAITING'}
+                {(gameRoom as any)?.status === 'active' ? 'LIVE' : 'WAITING'}
               </span>
             </div>
           </div>
@@ -111,14 +111,14 @@ export default function GamePage() {
                 <div className="flex items-center space-x-2 text-sm text-discord-gray">
                   <i className="fas fa-clock"></i>
                   <span data-testid="game-timer">
-                    {gameState ? `${Math.floor(gameState.timeLeft / 60)}:${(gameState.timeLeft % 60).toString().padStart(2, '0')}` : '--:--'}
+                    {gameState ? `${Math.floor((gameState as any).timeLeft / 60)}:${((gameState as any).timeLeft % 60).toString().padStart(2, '0')}` : '--:--'}
                   </span>
                 </div>
               </div>
             </div>
             
             <GameCanvas 
-              gameState={liveGameState || gameState} 
+              gameState={liveGameState || (gameState as any)} 
               isMyTurn={isMyTurn}
               onShoot={(power, angle) => sendMessage({ type: 'shoot', payload: { power, angle } })}
               onAim={(cuePosition) => sendMessage({ type: 'aim', payload: { cuePosition } })}
@@ -128,9 +128,9 @@ export default function GamePage() {
         
         {/* Right Sidebar */}
         <div className="w-80 bg-discord-darker p-4 space-y-4 overflow-y-auto">
-          <PlayerPanel players={players || []} />
+          <PlayerPanel players={(players as any) || []} />
           <VoiceControls roomId={roomId || ''} />
-          <GameStats gameState={gameState} players={players || []} />
+          <GameStats gameState={gameState as any} players={(players as any) || []} />
           
           {/* Discord Integration */}
           <div className="bg-discord-dark rounded-lg p-4">
